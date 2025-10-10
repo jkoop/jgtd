@@ -18,8 +18,8 @@ final class CreateTask implements Controller {
 
         $rand = bin2hex(random_bytes(4));
 
-        writeYamlFile(storagePath("tasks/{$slug}-{$rand}.yml"), [
-            "inbox" => true,
+        writeYamlFile(storagePath("tasks/inbox/{$slug}-{$rand}.yml"), [
+            "version" => 1,
             "title" => $title,
             "notes" => $notes,
             "created_at" => new \DateTime(),
