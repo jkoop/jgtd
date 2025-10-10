@@ -1,0 +1,63 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100svh;
+    font-family: serif;
+    margin: 0;
+}
+
+nav, footer {
+    background: #ddd;
+    padding-block: 1rem;
+    padding-inline: 8px;
+}
+
+nav {
+    border-bottom: 1px solid grey;
+}
+
+main {
+    flex-grow: 1;
+    padding-inline: 8px;
+}
+
+footer {
+    border-top: 1px solid grey;
+}
+
+label {
+    font-weight: bold;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.has-tooltip {
+    position: relative;
+}
+
+.has-tooltip .tooltip {
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 100%;
+    transition: opacity 200ms;
+
+    opacity: 0.00;
+    display: none;
+
+    padding: 0.25em 0.5em;
+    color: black;
+    background: yellow;
+    border: 1px solid black;
+    white-space: nowrap;
+}
+
+.has-tooltip:hover .tooltip {
+    display: block;
+    opacity: 1.00;
+}
