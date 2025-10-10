@@ -13,7 +13,6 @@ final class Template {
 
         $iconT = filemtime(publicPath("/favicon.png"));
         $styleT = filemtime(publicPath("/style.css"));
-        $nonce = nonce();
 
         return <<<HTML
         <!DOCTYPE html>
@@ -22,8 +21,8 @@ final class Template {
                 <meta charset="utf8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <title>$documentTitle - JGTD</title>
-                <link href="/favicon.png?t=$iconT" rel="icon" $nonce />
-                <link href="/style.css?t=$styleT" rel="stylesheet" $nonce />
+                <link href="/favicon.png?t=$iconT" rel="icon" />
+                <link href="/style.css?t=$styleT" rel="stylesheet" />
             </head>
             <body>
                 <nav>

@@ -51,7 +51,7 @@ function init(): void {
     }
 
     $nonce = bin2hex(random_bytes(12));
-    header("Content-Security-Policy: default-src 'nonce-$nonce'");
+    header("Content-Security-Policy: script-src 'nonce-$nonce'");
 }
 
 function e(string $string): string {
