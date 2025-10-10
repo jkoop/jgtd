@@ -43,6 +43,7 @@ final class Router {
                 switch ($method) {
                     case "HEAD":
                     case "GET":
+                        Auth::require();
                         page("inbox");
                     default:
                         methodNotAllowed(["HEAD", "GET"]);
@@ -52,6 +53,7 @@ final class Router {
                 switch ($method) {
                     case "HEAD":
                     case "GET":
+                        Auth::require();
                         page("task");
                     default:
                         methodNotAllowed(["HEAD", "GET"]);
@@ -61,9 +63,22 @@ final class Router {
                 switch ($method) {
                     case "HEAD":
                     case "GET":
+                        Auth::require();
                         page("new-task");
                     case "POST":
+                        Auth::require();
                         CreateTask::entrypoint();
+                    default:
+                        methodNotAllowed(["HEAD", "GET", "POST"]);
+                }
+
+            case "login":
+                switch ($method) {
+                    case "HEAD":
+                    case "GET":
+                        page("login");
+                    case "POST":
+                        Login::entrypoint();
                     default:
                         methodNotAllowed(["HEAD", "GET", "POST"]);
                 }

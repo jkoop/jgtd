@@ -36,6 +36,15 @@ form {
     gap: 1rem;
 }
 
+form > div:not(:has(button)) {
+    display: flex;
+    flex-direction: column;
+}
+
+details {
+    margin-block: 1rem;
+}
+
 .has-tooltip {
     position: relative;
 }

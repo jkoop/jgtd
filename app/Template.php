@@ -11,15 +11,19 @@ final class Template {
         $documentTitle = e(implode(" - ", array_reverse($title)));
         $pageTitle = e(implode(": ",$title));
 
+        $iconT = filemtime(publicPath("/favicon.png"));
+        $styleT = filemtime(publicPath("/style.css"));
+        $nonce = nonce();
+
         return <<<HTML
         <!DOCTYPE html>
         <html>
             <head>
                 <meta charset="utf8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <title>$documentTitle - To Do</title>
-                <link href="/favicon.png" rel="icon" />
-                <link href="/style.css" rel="stylesheet" />
+                <title>$documentTitle - JGTD</title>
+                <link href="/favicon.png?t=$iconT" rel="icon" $nonce />
+                <link href="/style.css?t=$styleT" rel="stylesheet" $nonce />
             </head>
             <body>
                 <nav>
@@ -32,19 +36,11 @@ final class Template {
     }
 
     public static function afterContent(): string {
-        // $diskUsage = exec("du -sh " . escapeshellarg(storagePath('')));
-        // $diskUsage = explode("\t", $diskUsage)[0];
-        // $diskUsage = e($diskUsage);
-
-        // $pageTime = microtime(true) - START_TIME;
-        // $pageTime = number_format($pageTime, 3);
-        // $pageTime .= 's';
-
         return <<<HTML
                 </main>
                 <footer>
                     Footer
-                    <!-- Site takes \$diskUsage of disk; page took \$pageTime -->
+                    <a style="float:right;clear:both" href="https://github.com/jkoop/jgtd" target="_blank">JGTD</a>
                 </footer>
             </body>
         </html>

@@ -2,12 +2,18 @@
 
 use App\Template;
 
-const STORAGE_PATH = __DIR__ . '/../storage';
-
-init();
-
 function init(): void {
-    date_default_timezone_set("America/Winnipeg");
+    global $config;
+    global $nonce;
+
+    session_set_cookie_params([
+        "lifetime" => 0, // until the browser is closed
+        "path" => "/", // the whole site
+        // "domain" => 
+        // secure
+        "httponly" => true,
+        "samesite" => true,
+    ]);
 
     // assure that the storage directory exists
     if (!is_dir(storagePath("/"))) mkdir(storagePath("/"));
@@ -15,6 +21,37 @@ function init(): void {
     // assure that there's a git repo in the storage directory
     exec("git -C " . escapeshellarg(storagePath("/")) . " branch", result_code: $exitCode);
     if ($exitCode != 0) exec("git -C " . escapeshellarg(storagePath("/")) . " init");
+
+    $saveConfig = false;
+    $config = readYamlFile(storagePath("/config.yml")) ?: [ "version" => 1 ];
+
+    if (!array_key_exists("password", $config)) {
+        $newPassword = bin2hex(random_bytes(24));
+        $config["password"] = password_hash($newPassword, null);
+        $saveConfig = true;
+        error_log("\n\n\nYour new password is:\n$newPassword\n\n\n");
+    }
+
+    if (
+        !array_key_exists("timezone", $config) ||
+        date_default_timezone_set($config["timezone"]) == false
+    ) {
+        $config["timezone"] = "America/Winnipeg";
+        date_default_timezone_set($config["timezone"]);
+        $saveConfig = true;
+    }
+
+    if (!array_key_exists("secret", $config)) {
+        $config["secret"] = bin2hex(random_bytes(24));
+        $saveConfig = true;
+    }
+
+    if ($saveConfig) {
+        writeYamlFile(storagePath("/config.yml"), $config);
+    }
+
+    $nonce = bin2hex(random_bytes(12));
+    header("Content-Security-Policy: default-src 'nonce-$nonce'");
 }
 
 function e(string $string): string {
@@ -27,6 +64,11 @@ function methodNotAllowed(array $allow): void {
     http_response_code(405);
     header("Allow: " . $allowedMethods);
     page("method-not-allowed");
+}
+
+function nonce(): string {
+    global $nonce;
+    return "nonce=\"$nonce\"";
 }
 
 function notFound(): never {
@@ -74,8 +116,16 @@ function slugify(string $string): string {
     return $string;
 }
 
+const STORAGE_PATH = __DIR__ . '/../storage';
+
 function storagePath(string $path): string {
     return STORAGE_PATH . "/" . $path;
+}
+
+const PUBLIC_PATH = __DIR__ . '/../html';
+
+function publicPath(string $path): string {
+    return PUBLIC_PATH . "/" . $path;
 }
 
 function validate(string $type, mixed $value): bool {
@@ -120,3 +170,5 @@ function writeYamlFile(string $path, array|object $data): void {
     @mkdir(dirname($path), recursive: true);
     yaml_emit_file($path, $data, YAML_UTF8_ENCODING, YAML_LN_BREAK, YAML_EMIT_CALLBACKS) || die("Couldn't write file.");
 }
+
+init();
