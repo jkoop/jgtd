@@ -1,3 +1,4 @@
 *.sqlite
 /vendor
 /storage
+/docker-compose.override.yml
