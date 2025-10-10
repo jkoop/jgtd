@@ -1,10 +1,21 @@
 <?php
 
-use App\Migrator;
 use App\Template;
 
-date_default_timezone_set("America/Winnipeg");
-// Migrator::migrate();
+const STORAGE_PATH = __DIR__ . '/../storage';
+
+init();
+
+function init(): void {
+    date_default_timezone_set("America/Winnipeg");
+
+    // assure that the storage directory exists
+    if (!is_dir(storagePath("/"))) mkdir(storagePath("/"));
+
+    // assure that there's a git repo in the storage directory
+    exec("git -C " . escapeshellarg(storagePath("/")) . " branch", result_code: $exitCode);
+    if ($exitCode != 0) exec("git -C " . escapeshellarg(storagePath("/")) . " init");
+}
 
 function e(string $string): string {
     return htmlentities($string, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
@@ -64,7 +75,7 @@ function slugify(string $string): string {
 }
 
 function storagePath(string $path): string {
-    return __DIR__ . '/../storage/' . $path;
+    return STORAGE_PATH . "/" . $path;
 }
 
 function validate(string $type, mixed $value): bool {
