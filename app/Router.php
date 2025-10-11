@@ -34,7 +34,7 @@ final class Router {
                 switch ($method) {
                     case "HEAD":
                     case "GET":
-                        redirect("/inbox");
+                        redirect("/new-task");
                     default:
                         methodNotAllowed(["HEAD", "GET"]);
                 }

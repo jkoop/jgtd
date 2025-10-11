@@ -26,7 +26,7 @@ final class CreateTask implements Controller {
             "updated_at" => new \DateTime(),
         ]);
 
-        redirect("/");
+        redirect("/inbox");
         exit;
     }
 }
