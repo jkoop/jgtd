@@ -11,6 +11,14 @@ abstract class Storable {
         if (isset($this->attributes["id"]) == false) {
             $this->attributes["id"] = static::generateId();
         }
+
+        // it's saved with the wrong id. fix it
+        if (
+            isset($this->storagePath) &&
+            !str_ends_with(preg_replace("/\.yml$/", "", $this->storagePath), "-" . $this->attributes["id"])
+        ) {
+            $this->save();
+        }
     }
 
     public static function generateId(): string {
