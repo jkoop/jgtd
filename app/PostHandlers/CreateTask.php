@@ -2,6 +2,8 @@
 
 namespace App\PostHandlers;
 
+use App\Storable\Task;
+
 final class CreateTask implements PostHandler {
     public static function entrypoint(): never {
         if (!validate("string-not-empty", $_POST["title"] ?? null)) die("Form validation failure: title");
@@ -14,17 +16,14 @@ final class CreateTask implements PostHandler {
         $notes = str_replace("\r", "", $notes);
         $notes = trim($notes);
         
-        $slug = slugify($title);
-
-        $rand = bin2hex(random_bytes(4));
-
-        writeYamlFile(storagePath("tasks/inbox/{$slug}-{$rand}.yml"), [
-            "version" => 1,
+        $task = new Task([
             "title" => $title,
             "notes" => $notes,
+            "list" => "inbox",
             "created_at" => new \DateTime(),
             "updated_at" => new \DateTime(),
         ]);
+        $task->save();
 
         redirect("/inbox");
         exit;

@@ -5,6 +5,7 @@ use App\Template;
 global $path;
 $filepath = array_filter($path, fn (string $part): bool => $part != ".."); // security
 
+
 if (
     $filepath != $path ||
     str_contains(strtolower($_SERVER["REQUEST_URI"]), "%2f")
