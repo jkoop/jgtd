@@ -45,6 +45,10 @@ details {
     margin-block: 1rem;
 }
 
+pre {
+    white-space: break-spaces;
+}
+
 .has-tooltip {
     position: relative;
 }
