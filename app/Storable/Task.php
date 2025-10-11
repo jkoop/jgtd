@@ -8,7 +8,7 @@ final class Task extends Storable {
     }
 
     public function getSlug(): string {
-        return slugify($this->title);
+        return slugify($this->title, limitLength: true);
     }
 
     public function getStoragePrefix(): string {

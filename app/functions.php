@@ -106,13 +106,19 @@ function redirect(string $location): never {
     exit;
 }
 
-function slugify(string $string): string {
+function slugify(string $string, bool $limitLength = false): string {
     static $transliterator = Transliterator::create("Any-Latin; Latin-ASCII");
     $string = $transliterator->transliterate($string);
     $string = strtolower($string);
     $string = str_replace("'", "", $string);
     $string = preg_replace("/[^A-Za-z0-9-_]/", "-", $string);
     $string = trim($string, "-");
+
+    if ($limitLength) {
+        $string = substr($string, 0, 200);
+        $string = trim($string, "-");
+    }
+
     return $string;
 }
 
@@ -166,9 +172,17 @@ function readYamlFile(string $path): mixed {
     return yaml_parse_file($path, 0, $ndocs, callbacks: YAML_PARSE_CALLBACKS);
 }
 
-function writeYamlFile(string $path, array|object $data): void {
+function writeYamlFile(string $path, array $data): void {
+    sortForStorage($data);
     @mkdir(dirname($path), recursive: true);
     yaml_emit_file($path, $data, YAML_UTF8_ENCODING, YAML_LN_BREAK, YAML_EMIT_CALLBACKS) || die("Couldn't write file.");
+}
+
+function sortForStorage(array &$array): void {
+    ksort($array);
+    foreach ($array as &$value) {
+        if (is_array($value)) sortForStorage($value);
+    }
 }
 
 init();

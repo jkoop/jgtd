@@ -1,34 +1,38 @@
 <?php
 
+use App\Storable\Task;
 use App\Template;
 
 global $path;
-$filepath = array_filter($path, fn (string $part): bool => $part != ".."); // security
 
-
-if (
-    $filepath != $path ||
-    str_contains(strtolower($_SERVER["REQUEST_URI"]), "%2f")
-) {
-    redirect("/" . $filepath);
-}
-
+if (count($path) > 2) redirect("/task/" . $path[1]);
 noQueryString();
 
-array_shift($filepath);
-$filepath = implode("/", $filepath);
-$task = readYamlFile(storagePath("tasks/" . $filepath . ".yml"));
-if ($task === false) notFound();
+if (count($path) < 2) notFound();
+
+$id = $path[1];
+$id = explode("-", $id);
+$id = array_pop($id);
+if ($id == null) notFound();
+
+$task = Task::loadFromId($id);
+if ($task == null) notFound();
+
+$canonicalPath = $task->webPath;
+$canonicalPath = trim($canonicalPath, "/");
+$canonicalPath = explode("/", $canonicalPath);
+
+if ($path != $canonicalPath) redirect($task->webPath);
 
 ?>
-<?= Template::beforeContent(title: ["Task", $task["title"]]) ?>
+<?= Template::beforeContent(title: ["Task", $task->title]) ?>
 
 <p><a href="/<?= implode("/", $path) ?>/edit">[edit]</a></p>
 
-<?php if (strlen(trim($task["notes"]))): ?>
-    <pre><?= e($task["notes"]) ?></pre>
-<?php else: ?>
+<?php if (empty(trim($task->notes))): ?>
     <p><i>no notes</i></p>
+<?php else: ?>
+    <pre><?= e($task->notes) ?></pre>
 <?php endif ?>
 
 <?= Template::afterContent() ?>

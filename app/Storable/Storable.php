@@ -35,6 +35,7 @@ abstract class Storable {
 
     public function getSlug(): string {
         // children are expected to implement this method
+        // do not return strings longer than 200 bytes
     }
 
     /**
@@ -53,7 +54,7 @@ abstract class Storable {
     }
 
     public static function all(string $prefix): Generator {
-        $dirpath = (new static())->getStorageDirectory();
+        $dirpath = (new static())->storageDirectory;
         $dirpath = $dirpath . "/" . $prefix;
         $dirpath = storagePath($dirpath);
         $filepaths = glob($dirpath . "/**.yml");
@@ -71,10 +72,10 @@ abstract class Storable {
     }
 
     public static function loadFromId(string $id): static|null {
-        if (preg_match("/[" . static::ID_CHAR_POOL . "]/", $id)) return null; // invalid id never finds anything
-        $dirpath = (new static())->getStorageDirectory();
+        if (preg_match("/[^" . static::ID_CHAR_POOL . "]/", $id)) return null; // invalid id never finds anything
+        $dirpath = (new static())->storageDirectory;
         $dirpath = storagePath($dirpath);
-        $filepaths = glob($dirpath . "/**-$id.yml");
+        $filepaths = glob($dirpath . "/**/*-$id.yml");
         $filepath = $filepaths[0] ?? null;
         if ($filepath === null) return null;
         return static::loadFromPath($filepath);
@@ -82,18 +83,18 @@ abstract class Storable {
 
     public function save(): void {
         if (method_exists($this, "getStoragePrefix")) {
-            $prefix = $this->getStoragePrefix();
+            $prefix = $this->storagePrefix;
         } else {
             $prefix = "";
         }
 
-        $dirpath = storagePath((new static())->getStorageDirectory());
+        $dirpath = storagePath((new static())->storageDirectory);
         if (!is_dir($dirpath)) mkdir($dirpath);
 
         $dirpath .= "/" . $prefix;
         if (!is_dir($dirpath)) mkdir($dirpath);
 
-        $filepath = $dirpath . "/" . $this->getSlug() . "-" . $this->id . ".yml";
+        $filepath = $dirpath . "/" . $this->slug . "-" . $this->id . ".yml";
         if (!is_file($filepath)) {
             rename($this->storagePath, $filepath);
             $this->storagePath = $filepath;
