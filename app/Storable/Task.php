@@ -12,6 +12,6 @@ final class Task extends Storable {
     }
 
     public function getStoragePrefix(): string {
-        return $this->list;
+        return $this->list ??= "inbox";
     }
 }
