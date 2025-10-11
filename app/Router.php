@@ -2,6 +2,9 @@
 
 namespace App;
 
+use App\PostHandlers\CreateTask;
+use App\PostHandlers\Login;
+
 final class Router {
     public static function route(): never {
         global $path;

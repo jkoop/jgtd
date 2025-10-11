@@ -1,7 +1,7 @@
 <?php
 
-namespace App;
+namespace App\PostHandlers;
 
-interface Controller {
+interface PostHandler {
     public static function entrypoint(): never;
 }

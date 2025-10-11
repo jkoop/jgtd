@@ -1,8 +1,8 @@
 <?php
 
-namespace App;
+namespace App\PostHandlers;
 
-final class CreateTask implements Controller {
+final class CreateTask implements PostHandler {
     public static function entrypoint(): never {
         if (!validate("string-not-empty", $_POST["title"] ?? null)) die("Form validation failure: title");
         if (!validate("string", $_POST["notes"] ?? null)) die("Form validation failure: notes");
