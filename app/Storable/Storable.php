@@ -63,7 +63,7 @@ abstract class Storable {
 		$filepaths = glob($dirpath . "/**.yml");
 		foreach ($filepaths as $filepath) {
 			$storable = static::loadFromPath($filepath);
-			if ($storable === false) continue;
+			if ($storable == null) continue;
 			yield $storable;
 		}
 	}
