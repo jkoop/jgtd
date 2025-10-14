@@ -96,10 +96,10 @@ pre {
     }
 
     a:not(:visited) {
-        color: green;
+        color: yellow;
     }
 
     a:visited {
-        color: yellow;
+        color: green;
     }
 }
