@@ -44,10 +44,7 @@ if ($path != $canonicalPath) redirect($task->webPath . "/edit");
     </div>
 
     <div>
-        <button type="submit" class="has-tooltip">
-            Save
-            <span class="tooltip">Ctrl + Enter</span>
-        </button>
+        <button type="submit" x-key-combo="Ctrl+Enter">Save</button>
     </div>
 </form>
 

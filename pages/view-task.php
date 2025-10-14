@@ -27,7 +27,7 @@ if ($path != $canonicalPath) redirect($task->webPath);
 ?>
 <?= Template::beforeContent(title: ["Task", $task->title]) ?>
 
-<p><a href="/<?= implode("/", $path) ?>/edit">[edit]</a></p>
+<p><a href="/<?= implode("/", $path) ?>/edit" x-key-combo="E">[edit]</a></p>
 
 <?php if (empty(trim($task->notes))): ?>
     <p><i>no notes</i></p>

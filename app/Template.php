@@ -29,8 +29,8 @@ final class Template {
             </head>
             <body>
                 <nav>
-                    <a href="/inbox">Inbox</a> -
-                    <a href="/new-task">New Task</a>
+                    <a href="/inbox" x-key-combo="I">Inbox</a> -
+                    <a href="/new-task" x-key-combo="N">New Task</a>
                 </nav>
                 <main>
                     <h1>$pageTitle</h1>
