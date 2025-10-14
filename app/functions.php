@@ -1,5 +1,7 @@
 <?php
 
+use App\Storable\Storable;
+use App\Storable\Task;
 use App\Template;
 
 function init(): void {
@@ -62,13 +64,24 @@ function e(string $string, bool $linkify = true): string {
     $html = "";
 
     while (true) {
-        preg_match("/[^\s()[\]{},.]+(\.[^\s()[\]{},.]+)+/m", $string, $matches, PREG_OFFSET_CAPTURE);
+        preg_match("/[^\s()[\]{},.]+(\.[^\s()[\]{},.]+)+|\[\[[" . Storable::ID_CHAR_POOL . "]+\]\]/m", $string, $matches, PREG_OFFSET_CAPTURE);
         $match = $matches[0] ?? ["", strlen($string)];
 
-        $html .= htmlentities(substr($string, 0, $match[1]), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+        $html .= e(substr($string, 0, $match[1]), linkify: false);
         $link = $match[0];
         if ($link == "") break;
         $string = substr($string, $match[1] + strlen($link));
+
+        if (str_starts_with($link, '[[')) {
+            $id = substr($link, 2, -2);
+            $task = Task::loadFromId($id);
+            if ($task == null) {
+                $html .= '<span class="red">' . $link . '</span>';
+                continue;
+            }
+            $html .= "<a href=\"$task->webPath\">" . e($task->title, linkify: false) . "</a>";
+            continue;
+        }
 
         $url = parse_url($link);
         $addedScheme = false;
@@ -76,14 +89,14 @@ function e(string $string, bool $linkify = true): string {
             $url = parse_url("http://" . $link);
             $addedScheme = true;
         }
-
+        
         // doesn't look like a good url
         if ($url == false || !isset($url["scheme"])) {
-            $html .= htmlentities($link, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+            $html .= e($link, linkify: false);
             continue;
         }
-
-        $link = htmlentities($link, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+        
+        $link = e($link, linkify: false);
         $html .= $addedScheme ?
             "<a href=\"http://$link\">$link</a>" :
             "<a href=\"$link\">$link</a>";

@@ -74,3 +74,7 @@ pre {
     display: block;
     opacity: 1.00;
 }
+
+.monospace {
+    font-family: monospace;
+}
