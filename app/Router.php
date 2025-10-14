@@ -4,6 +4,7 @@ namespace App;
 
 use App\PostHandlers\CreateTask;
 use App\PostHandlers\Login;
+use App\PostHandlers\SaveTask;
 
 final class Router {
     public static function route(): never {
@@ -53,11 +54,24 @@ final class Router {
                 }
 
             case "task":
+                if (count($path) >= 3 && $path[2] == "edit")
                 switch ($method) {
                     case "HEAD":
                     case "GET":
                         Auth::require();
-                        page("task");
+                        page("edit-task");
+                    case "POST":
+                        Auth::require();
+                        SaveTask::entrypoint();
+                    default:
+                        methodNotAllowed(["HEAD", "GET", "POST"]);
+                }
+
+                switch ($method) {
+                    case "HEAD":
+                    case "GET":
+                        Auth::require();
+                        page("view-task");
                     default:
                         methodNotAllowed(["HEAD", "GET"]);
                 }
