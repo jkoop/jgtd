@@ -16,22 +16,22 @@ usort($tasks, fn (Task $a, Task $b): int => slugify($a->title) <=> slugify($b->t
 <?= Template::beforeContent(title: "Inbox") ?>
 
 <?php if (empty($tasks)): ?>
-    <p><i>empty list</i></p>
+	<p><i>empty list</i></p>
 <?php else: ?>
-    <table>
-        <thead>
-            <tr>
-                <th>Title</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($tasks as $task): ?>
-                <tr>
-                    <td><a href="<?= e($task->webPath) ?>"><?= e($task->title, linkify: false) ?></a></td>
-                </tr>
-            <?php endforeach ?>
-        </tbody>
-    </table>
+	<table>
+		<thead>
+			<tr>
+				<th>Title</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach ($tasks as $task): ?>
+				<tr>
+					<td><a href="<?= e($task->webPath) ?>"><?= e($task->title, linkify: false) ?></a></td>
+				</tr>
+			<?php endforeach ?>
+		</tbody>
+	</table>
 <?php endif ?>
 
 <?= Template::afterContent() ?>

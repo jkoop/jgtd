@@ -30,9 +30,9 @@ if ($path != $canonicalPath) redirect($task->webPath);
 <p><a href="/<?= implode("/", $path) ?>/edit" x-key-combo="E">[edit]</a></p>
 
 <?php if (empty(trim($task->notes))): ?>
-    <p><i>no notes</i></p>
+	<p><i>no notes</i></p>
 <?php else: ?>
-    <pre><?= e($task->notes) ?></pre>
+	<pre><?= e($task->notes) ?></pre>
 <?php endif ?>
 
 <?= Template::afterContent() ?>

@@ -3,15 +3,15 @@
 namespace App\Storable;
 
 final class Task extends Storable {
-    public function getWebPath(): string {
-        return "/task/$this->slug-$this->id";
-    }
+	public function getWebPath(): string {
+		return "/task/$this->slug-$this->id";
+	}
 
-    public function getSlug(): string {
-        return slugify($this->title, limitLength: true);
-    }
+	public function getSlug(): string {
+		return slugify($this->title, limitLength: true);
+	}
 
-    public function getStoragePrefix(): string {
-        return $this->list ??= "inbox";
-    }
+	public function getStoragePrefix(): string {
+		return $this->list ??= "inbox";
+	}
 }
