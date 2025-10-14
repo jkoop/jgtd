@@ -76,7 +76,10 @@ function e(string $string, bool $linkify = true): string {
             $id = substr($link, 2, -2);
             $task = Task::loadFromId($id);
             if ($task == null) {
-                $html .= '<span class="red">' . $link . '</span>';
+                $link = e($link, linkify: false);
+                $html .= <<<HTML
+                <span class="has-tooltip">$link<span class="tooltip">This looks like a link to a task, but there's no task with this ID.</span></span>
+                HTML;
                 continue;
             }
             $html .= "<a href=\"$task->webPath\">" . e($task->title, linkify: false) . "</a>";

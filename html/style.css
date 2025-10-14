@@ -73,6 +73,8 @@ pre {
 .has-tooltip:hover .tooltip {
     display: block;
     opacity: 1.00;
+    font-family: serif;
+    font-size: 16px;
 }
 
 .monospace {
