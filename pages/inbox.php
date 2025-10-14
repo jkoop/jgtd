@@ -27,7 +27,7 @@ usort($tasks, fn (Task $a, Task $b): int => slugify($a->title) <=> slugify($b->t
         <tbody>
             <?php foreach ($tasks as $task): ?>
                 <tr>
-                    <td><a href="<?= e($task->webPath) ?>"><?= e($task->title) ?></a></td>
+                    <td><a href="<?= e($task->webPath) ?>"><?= e($task->title, linkify: false) ?></a></td>
                 </tr>
             <?php endforeach ?>
         </tbody>

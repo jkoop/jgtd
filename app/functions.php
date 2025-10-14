@@ -54,8 +54,42 @@ function init(): void {
     header("Content-Security-Policy: script-src 'nonce-$nonce'");
 }
 
-function e(string $string): string {
-    return htmlentities($string, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+function e(string $string, bool $linkify = true): string {
+    if ($linkify == false) {
+        return htmlentities($string, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+    }
+
+    $html = "";
+
+    while (true) {
+        preg_match("/[^\s()[\]{},.]+(\.[^\s()[\]{},.]+)+/m", $string, $matches, PREG_OFFSET_CAPTURE);
+        $match = $matches[0] ?? ["", strlen($string)];
+
+        $html .= htmlentities(substr($string, 0, $match[1]), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+        $link = $match[0];
+        if ($link == "") break;
+        $string = substr($string, $match[1] + strlen($link));
+
+        $url = parse_url($link);
+        $addedScheme = false;
+        if (!isset($url["scheme"])) {
+            $url = parse_url("http://" . $link);
+            $addedScheme = true;
+        }
+
+        // doesn't look like a good url
+        if ($url == false || !isset($url["scheme"])) {
+            $html .= htmlentities($link, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+            continue;
+        }
+
+        $link = htmlentities($link, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+        $html .= $addedScheme ?
+            "<a href=\"http://$link\">$link</a>" :
+            "<a href=\"$link\">$link</a>";
+    }
+
+    return $html;
 }
 
 function methodNotAllowed(array $allow): void {

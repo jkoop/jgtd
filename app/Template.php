@@ -8,7 +8,7 @@ final class Template {
 
     public static function beforeContent(string|array $title): string {
         if (!is_array($title)) $title = [$title];
-        $documentTitle = e(implode(" - ", array_reverse($title)));
+        $documentTitle = e(implode(" - ", array_reverse($title)), linkify: false);
         $pageTitle = e(implode(": ",$title));
 
         $iconT = filemtime(publicPath("/favicon.png"));

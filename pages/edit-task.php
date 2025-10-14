@@ -33,13 +33,13 @@ if ($path != $canonicalPath) redirect($task->webPath . "/edit");
 <form method="post">
     <div>
         <label for="title">Title</label>
-        <input id="title" name="title" value="<?= e($task->title) ?>" required />
+        <input id="title" name="title" value="<?= e($task->title, linkify: false) ?>" required />
         <span>What would need to happen for you to check this off as "done"?</span>
     </div>
 
     <div>
         <label for="notes">Notes</label>
-        <textarea id="notes" name="notes" style="resize:block;height:100px"><?= e($task->notes) ?></textarea>
+        <textarea id="notes" name="notes" style="resize:block;height:100px"><?= e($task->notes, linkify: false) ?></textarea>
     </div>
 
     <div>
