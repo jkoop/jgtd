@@ -17,6 +17,14 @@ nav {
 	border-bottom: 1px solid grey;
 }
 
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
 main {
 	flex-grow: 1;
 	padding-inline: 8px;
