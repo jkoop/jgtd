@@ -101,8 +101,8 @@ function e(string $string, bool $linkify = true): string {
 
 		$link = e($link, linkify: false);
 		$html .= $addedScheme ?
-			"<a href=\"http://$link\">$link</a>" :
-			"<a href=\"$link\">$link</a>";
+			"<a target=\"_blank\" href=\"http://$link\">$link</a>" :
+			"<a target=\"_blank\" href=\"$link\">$link</a>";
 	}
 
 	return $html;
