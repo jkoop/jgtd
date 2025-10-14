@@ -156,19 +156,13 @@ function redirect(string $location): never {
 	exit;
 }
 
-function slugify(string $string, bool $limitLength = false): string {
+function slugify(string $string): string {
 	static $transliterator = Transliterator::create("Any-Latin; Latin-ASCII");
 	$string = $transliterator->transliterate($string);
 	$string = strtolower($string);
 	$string = str_replace("'", "", $string);
 	$string = preg_replace("/[^A-Za-z0-9-_]+/", "-", $string);
 	$string = trim($string, "-");
-
-	if ($limitLength) {
-		$string = substr($string, 0, 200);
-		$string = trim($string, "-");
-	}
-
 	return $string;
 }
 

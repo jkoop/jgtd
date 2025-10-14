@@ -15,7 +15,7 @@ abstract class Storable {
 		// it's saved with the wrong id. fix it
 		if (
 			isset($this->storagePath) &&
-			!str_ends_with(preg_replace("/\.yml$/", "", $this->storagePath), "-" . $this->attributes["id"])
+			basename($this->storagePath, ".yml") != $this->attributes["id"]
 		) {
 			$this->save();
 		}
@@ -39,11 +39,6 @@ abstract class Storable {
 
 	public function __set(string $name, mixed $value): void {
 		$this->attributes[$name] = $value;
-	}
-
-	public function getSlug(): string {
-		// children are expected to implement this method
-		// do not return strings longer than 200 bytes
 	}
 
 	/**
@@ -83,7 +78,7 @@ abstract class Storable {
 		if (preg_match("/[^" . static::ID_CHAR_POOL . "]/", $id)) return null; // invalid id never finds anything
 		$dirpath = (new static())->storageDirectory;
 		$dirpath = storagePath($dirpath);
-		$filepaths = glob($dirpath . "/**/*-$id.yml");
+		$filepaths = glob($dirpath . "/**/$id.yml");
 		$filepath = $filepaths[0] ?? null;
 		if ($filepath === null) return null;
 		return static::loadFromPath($filepath);
@@ -102,12 +97,12 @@ abstract class Storable {
 		$dirpath .= "/" . $prefix;
 		if (!is_dir($dirpath)) mkdir($dirpath);
 
-		$filepath = $dirpath . "/" . $this->slug . "-" . $this->id . ".yml";
+		$filepath = $dirpath . "/" . $this->id . ".yml";
 		if (!is_file($filepath)) {
 			rename($this->storagePath, $filepath);
 			$this->storagePath = $filepath;
 		}
 
-		writeYamlFile($filepath, [...$this->attributes, "version" => 1]);
+		writeYamlFile($filepath, [...$this->attributes, "version" => 0]);
 	}
 }

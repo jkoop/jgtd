@@ -11,8 +11,6 @@ noQueryString();
 if (count($path) < 2) notFound();
 
 $id = $path[1];
-$id = explode("-", $id);
-$id = array_pop($id);
 if ($id == null) notFound();
 
 $task = Task::loadFromId($id);
