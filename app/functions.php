@@ -111,7 +111,7 @@ function slugify(string $string, bool $limitLength = false): string {
     $string = $transliterator->transliterate($string);
     $string = strtolower($string);
     $string = str_replace("'", "", $string);
-    $string = preg_replace("/[^A-Za-z0-9-_]/", "-", $string);
+    $string = preg_replace("/[^A-Za-z0-9-_]+/", "-", $string);
     $string = trim($string, "-");
 
     if ($limitLength) {
