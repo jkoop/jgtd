@@ -25,7 +25,7 @@ final class CreateTask implements PostHandler {
 		]);
 		$task->save();
 
-		redirect("/inbox");
+		redirect($task->webPath);
 		exit;
 	}
 }
