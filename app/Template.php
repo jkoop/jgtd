@@ -12,6 +12,7 @@ final class Template {
 		$pageTitle = e(implode(": ",$title));
 
 		$iconT = filemtime(publicPath("/favicon.png"));
+		$iconDT = filemtime(publicPath("/favicon-dark.png"));
 		$styleT = filemtime(publicPath("/style.css"));
 		$scriptT = filemtime(publicPath("/script.js"));
 		$nonce = nonce();
@@ -24,6 +25,7 @@ final class Template {
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<title>$documentTitle - JGTD</title>
 				<link href="/favicon.png?t=$iconT" rel="icon" />
+				<link href="/favicon-dark.png?t=$iconDT" rel="icon" media="(prefers-color-scheme: dark)" />
 				<link href="/style.css?t=$styleT" rel="stylesheet" />
 				<script src="/script.js?t=$scriptT" $nonce></script>
 			</head>
