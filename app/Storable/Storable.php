@@ -2,22 +2,28 @@
 
 namespace App\Storable;
 
+use DateTime;
 use Generator;
 
 abstract class Storable {
 	public const ID_CHAR_POOL = "0123456789abcdefghjkmnpqrstvwxyz";
+
+	private readonly array $original;
 
 	public function __construct(private array $attributes = [], private string|null $storagePath = null) {
 		if (isset($this->attributes["id"]) == false) {
 			$this->attributes["id"] = static::generateId();
 		}
 
-		// it's saved with the wrong id. fix it
-		if (
-			isset($this->storagePath) &&
-			basename($this->storagePath, ".yml") != $this->attributes["id"]
-		) {
-			$this->save();
+		if (isset($this->storagePath)){
+			$this->original = $attributes;
+
+			// it's saved with the wrong id. fix it
+			if (basename($this->storagePath, ".yml") != $this->attributes["id"]) {
+				$this->save();
+			}
+		} else {
+			$this->original = [];
 		}
 	}
 
@@ -101,6 +107,15 @@ abstract class Storable {
 		if (!is_file($filepath)) {
 			rename($this->storagePath, $filepath);
 			$this->storagePath = $filepath;
+		}
+
+		if (!isset($this->attributes["created_at"])) {
+			$this->attributes["created_at"] = new DateTime();
+			$this->attributes["updated_at"] = new DateTime();
+		}
+
+		if ($this->original != $this->attributes) {
+			$this->attributes["updated_at"] = new DateTime();
 		}
 
 		writeYamlFile($filepath, [...$this->attributes, "version" => 0]);
