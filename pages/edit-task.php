@@ -33,7 +33,7 @@ if ($path != $canonicalPath) redirect($task->webPath . "/edit");
 <form method="post">
     <div>
         <label for="title">Title</label>
-        <input id="title" name="title" value="<?= e($task->title, linkify: false) ?>" required />
+        <input id="title" name="title" value="<?= e($task->title, linkify: false) ?>" autofocus required />
         <span>What would need to happen for you to check this off as "done"?</span>
     </div>
 
