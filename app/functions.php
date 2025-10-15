@@ -65,7 +65,7 @@ function e(string $string, bool $linkify = true): string {
 	$html = "";
 
 	while (true) {
-		preg_match("/[^\s()[\]{},.]+(\.[^\s()[\]{},.]+)+|\[\[[" . Storable::ID_CHAR_POOL . "]+\]\]/m", $string, $matches, PREG_OFFSET_CAPTURE);
+		preg_match("/[^\s()[\]{}<>,.]+(\.[^\s()[\]{}<>,.]+)+|\[\[[" . Storable::ID_CHAR_POOL . "]+\]\]/m", $string, $matches, PREG_OFFSET_CAPTURE);
 		$match = $matches[0] ?? ["", strlen($string)];
 
 		$html .= e(substr($string, 0, $match[1]), linkify: false);
