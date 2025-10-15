@@ -135,8 +135,9 @@ abstract class Storable {
 
 		$gitignore = file_get_contents(storagePath("/.gitignore")) ?: "";
 		$gitignore = explode("\n", $gitignore);
-		if ($gitignore[0] == "") array_shift($gitignore);
-		if (!array_search("/repo.lock", $gitignore)) {
+		$gitignore = array_filter($gitignore, "strlen");
+		$gitignore = array_unique($gitignore);
+		if (array_search("/repo.lock", $gitignore) === false) {
 			$gitignore[] = "/repo.lock";
 			file_put_contents(storagePath("/.gitignore"), implode("\n", $gitignore) . "\n");
 		}
