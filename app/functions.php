@@ -21,8 +21,8 @@ function init(): void {
 	if (!is_dir(storagePath("/"))) mkdir(storagePath("/"));
 
 	// assure that there's a git repo in the storage directory
-	exec("git -C " . escapeshellarg(storagePath("/")) . " branch", result_code: $exitCode);
-	if ($exitCode != 0) exec("git -C " . escapeshellarg(storagePath("/")) . " init");
+	git_exec("branch", exitCode: $exitCode);
+	if ($exitCode != 0) git_exec("init");
 
 	$saveConfig = false;
 	$config = readYamlFile(storagePath("/config.yml")) ?: [ "version" => 1 ];
@@ -49,6 +49,7 @@ function init(): void {
 	}
 
 	if ($saveConfig) {
+		Storable::lock();
 		writeYamlFile(storagePath("/config.yml"), $config);
 	}
 
@@ -106,6 +107,25 @@ function e(string $string, bool $linkify = true): string {
 	}
 
 	return $html;
+}
+
+function git_exec(string $command, &$stdout = [], &$exitCode = 0): bool|string {
+	$workDir = escapeshellarg(storagePath("/"));
+	$gitDir = escapeshellarg(storagePath("/.git"));
+
+	$lastLine = exec("git -C $workDir --git-dir=$gitDir $command", $stdout, $exitCode);
+
+	if (
+		str_starts_with($command, "commit ") &&
+		$exitCode == 128
+	) {
+		// set the config, and try again
+		git_exec("config user.name JGTD");
+		git_exec("config user.email 'jgtd@null'");
+		return git_exec($command, $stdout, $exitCode);
+	}
+
+	return $lastLine;
 }
 
 function methodNotAllowed(array $allow): void {

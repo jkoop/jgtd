@@ -3,6 +3,7 @@
 namespace App\Storable;
 
 use DateTime;
+use Exception;
 use Generator;
 
 abstract class Storable {
@@ -118,6 +119,49 @@ abstract class Storable {
 			$this->attributes["updated_at"] = new DateTime();
 		}
 
+		self::lock();
 		writeYamlFile($filepath, [...$this->attributes, "version" => 0]);
 	}
+
+	private static $lockHandle = null;
+
+	/**
+	 * Lock storage repo for our use
+	 * @blocks
+	 * @return void
+	 */
+	public static function lock(): void {
+		if (self::$lockHandle != null) return; // we already have it
+
+		$gitignore = file_get_contents(storagePath("/.gitignore")) ?: "";
+		$gitignore = explode("\n", $gitignore);
+		if ($gitignore[0] == "") array_shift($gitignore);
+		if (!array_search("/repo.lock", $gitignore)) {
+			$gitignore[] = "/repo.lock";
+			file_put_contents(storagePath("/.gitignore"), implode("\n", $gitignore) . "\n");
+		}
+
+		self::$lockHandle = fopen(storagePath("/repo.lock"), "w");
+
+		if (
+			self::$lockHandle == false ||
+			flock(self::$lockHandle, LOCK_EX) == false
+		) throw new Exception("Couldn't lock storage repo.");
+
+		git_exec("commit -m 'Found some unexpected staged changes. [BOT]'");
+		git_exec("add --all");
+		git_exec("commit -m 'Found some unexpected changes. [BOT]'");
+	}
+
+	/**
+	 * Commit the changes to the storage repo, and unlocks the repo
+	 * @return void
+	 */
+	public final static function commit(): void {
+		if (self::$lockHandle == null) return;
+		git_exec("add --all");
+		git_exec("commit -m 'Commit changes. [BOT]'");
+	}
 }
+
+register_shutdown_function([Storable::class, "commit"]);
