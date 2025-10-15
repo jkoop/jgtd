@@ -148,9 +148,9 @@ abstract class Storable {
 			flock(self::$lockHandle, LOCK_EX) == false
 		) throw new Exception("Couldn't lock storage repo.");
 
-		git_exec("commit -m 'Found some unexpected staged changes. [BOT]'");
+		git_exec("commit -m 'Found some unexpected staged changes [BOT]'");
 		git_exec("add --all");
-		git_exec("commit -m 'Found some unexpected changes. [BOT]'");
+		git_exec("commit -m 'Found some unexpected changes [BOT]'");
 	}
 
 	/**
@@ -160,7 +160,7 @@ abstract class Storable {
 	public final static function commit(): void {
 		if (self::$lockHandle == null) return;
 		git_exec("add --all");
-		git_exec("commit -m 'Commit changes. [BOT]'");
+		git_exec("commit -m 'Commit changes [BOT]'");
 	}
 }
 
