@@ -3,7 +3,9 @@ window.addEventListener("mousedown", event => {
 	if (event.button != 0) return;
 	const anchor = event.target.closest("a");
 	if (anchor == null) return;
-	anchor.click();
+	const href = anchor.dataset.href ?? anchor.href;
+	if (anchor.href != "") anchor.removeAttribute("href");
+	location.href = href;
 });
 
 window.addEventListener("keydown", event => {
