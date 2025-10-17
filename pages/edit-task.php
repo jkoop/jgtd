@@ -28,7 +28,7 @@ if ($path != $canonicalPath) redirect($task->webPath . "/edit");
 ?>
 <?= Template::beforeContent(title: ["Task", $task->title]) ?>
 
-<p><a href="/<?= implode("/", array_slice($path, 0, -1)) ?>">[back]</a></p>
+<p><a href="/<?= implode("/", array_slice($path, 0, -1)) ?>" x-key-combo="B">[back]</a></p>
 
 <form method="post">
 	<div>

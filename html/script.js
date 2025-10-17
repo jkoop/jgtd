@@ -19,6 +19,14 @@ window.addEventListener("keydown", event => {
 		code.push(key.charAt(0).toUpperCase() + key.slice(1));
 
 	if (
+		code.length == 1 && code[0] == "Escape" &&
+		(target.tagName == "INPUT" || target.tagName == "TEXTAREA")
+	) {
+		target.blur();
+		return;
+	}
+
+	if (
 		code.filter(piece => piece != "Shift" && piece.length > 1).length < 1 &&
 		(target.tagName == "INPUT" || target.tagName == "TEXTAREA")
 	) return;
