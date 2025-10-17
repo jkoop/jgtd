@@ -19,7 +19,7 @@ noQueryString();
 
 	<div>
 		<label for="notes">Notes</label>
-		<textarea id="notes" name="notes" style="resize:block;height:100px"></textarea>
+		<textarea id="notes" name="notes"></textarea>
 	</div>
 
 	<div>

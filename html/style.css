@@ -9,8 +9,7 @@ body {
 
 nav, footer {
 	background: #ddd;
-	padding-block: 1rem;
-	padding-inline: 8px;
+	padding: 8px;
 }
 
 nav {
@@ -27,7 +26,15 @@ a:hover {
 
 main {
 	flex-grow: 1;
-	padding-inline: 8px;
+	padding: 8px;
+}
+
+main > *:first-child {
+	margin-block-start: 8px;
+}
+
+main > *:last-child {
+	margin-block-end: 8px;
 }
 
 footer {
@@ -41,7 +48,7 @@ label {
 form {
 	display: flex;
 	flex-direction: column;
-	gap: 1rem;
+	gap: 8px;
 }
 
 form > div:not(:has(button)) {
@@ -50,11 +57,17 @@ form > div:not(:has(button)) {
 }
 
 details {
-	margin-block: 1rem;
+	margin-block: 8px;
 }
 
 pre {
 	white-space: break-spaces;
+}
+
+textarea {
+	field-sizing: content;
+	min-height: 200px;
+	resize: none;
 }
 
 .has-tooltip {

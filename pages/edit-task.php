@@ -39,7 +39,7 @@ if ($path != $canonicalPath) redirect($task->webPath . "/edit");
 
 	<div>
 		<label for="notes">Notes</label>
-		<textarea id="notes" name="notes" style="resize:block;height:100px"><?= e($task->notes, linkify: false) ?></textarea>
+		<textarea id="notes" name="notes"><?= e($task->notes, linkify: false) ?></textarea>
 		<span>Refer to other tasks with <span class="monospace">[[taskid]]</span></span>
 	</div>
 
